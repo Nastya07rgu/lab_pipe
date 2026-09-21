@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="lab_belova/lab_belova.vcxproj" Id="f34053d7-6137-46cc-b84b-693e27fcfabd" />
+</Solution>
