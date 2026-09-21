@@ -126,6 +126,38 @@ void Edit_Pipe(Pipe& pipe) {
     pipe.status = ReadInt("Новый статус (1-в ремонте, 0-не в ремонте): ", 0, 1) == 1;
     cout << "Статус обновлён." << endl;
 }
+
+void Edit_CS(CS& cs) {
+    if (!cs.isAdded) {
+        cout << "Сначала добавьте КС!" << endl;
+        return;
+    }
+    cout << "\n=== Редактирование КС ===" << endl;
+    cout << "Цехов всего: " << cs.number_work << endl;
+    cout << "Цехов в работе: " << cs.number_work_online << endl;
+    cout << "1. Запустить цех" << endl;
+    cout << "2. Остановить цех" << endl;
+    int choice = ReadInt("Выберите действие: ", 1, 2);
+
+    if (choice == 1) {
+        if (cs.number_work_online < cs.number_work) {
+            cs.number_work_online++;
+            cout << "Цех запущен. Работает: " << cs.number_work_online << endl;
+        }
+        else {
+            cout << "Все цеха уже работают!" << endl;
+        }
+    }
+    else {
+        if (cs.number_work_online > 0) {
+            cs.number_work_online--;
+            cout << "Цех остановлен. Работает: " << cs.number_work_online << endl;
+        }
+        else {
+            cout << "Все цеха уже остановлены!" << endl;
+        }
+    }
+}
 int main() {
 	SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
@@ -141,6 +173,7 @@ int main() {
         case 2: Add_CS(cs); break;
         case 3: Show_All(pipe, cs); break;
         case 4: Edit_Pipe(pipe); break;
+        case 5: Edit_CS(cs); break;
         case 0: cout << "Выход." << endl; return 0;
         default: cout << "Пункт в разработке." << endl;
         }
