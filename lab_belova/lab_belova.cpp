@@ -116,6 +116,16 @@ void Add_CS(CS& cs) {
     cs.isAdded = true;
     cout << "КС добавлена!" << endl;
 }
+void Edit_Pipe(Pipe& pipe) {
+    if (!pipe.isAdded) {
+        cout << "Сначала добавьте трубу!" << endl;
+        return;
+    }
+    cout << "\n=== Редактирование трубы ===" << endl;
+    cout << "Текущий статус: " << (pipe.status ? "в ремонте" : "не в ремонте") << endl;
+    pipe.status = ReadInt("Новый статус (1-в ремонте, 0-не в ремонте): ", 0, 1) == 1;
+    cout << "Статус обновлён." << endl;
+}
 int main() {
 	SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
@@ -130,6 +140,7 @@ int main() {
         case 1: Add_Pipe(pipe); break;
         case 2: Add_CS(cs); break;
         case 3: Show_All(pipe, cs); break;
+        case 4: Edit_Pipe(pipe); break;
         case 0: cout << "Выход." << endl; return 0;
         default: cout << "Пункт в разработке." << endl;
         }
