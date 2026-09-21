@@ -107,6 +107,15 @@ void Add_Pipe(Pipe& pipe) {
     pipe.isAdded = true;
     cout << "Труба добавлена!" << endl;
 }
+void Add_CS(CS& cs) {
+    cout << "\n=== Добавление КС ===" << endl;
+    cs.name = ReadNonEmptyString("Название: ");
+    cs.number_work = ReadInt("Всего цехов: ", 1, 100000);
+    cs.number_work_online = ReadInt("Работающих цехов: ", 0, cs.number_work);
+    cs.class_cs = ReadNonEmptyString("Класс станции: ");
+    cs.isAdded = true;
+    cout << "КС добавлена!" << endl;
+}
 int main() {
 	SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
@@ -119,6 +128,7 @@ int main() {
         int choice = ReadInt("", 0, 7);
         switch (choice) {
         case 1: Add_Pipe(pipe); break;
+        case 2: Add_CS(cs); break;
         case 3: Show_All(pipe, cs); break;
         case 0: cout << "Выход." << endl; return 0;
         default: cout << "Пункт в разработке." << endl;
