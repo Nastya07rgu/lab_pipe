@@ -97,9 +97,32 @@ void Show_All(const Pipe& pipe, const CS& cs) {
         cout << "КС не добавлена." << endl;
     }
 }
+
+void Add_Pipe(Pipe& pipe) {
+    cout << "\n=== Добавление трубы ===" << endl;
+    pipe.name = ReadNonEmptyString("Введите километровую отметку (название): ");
+    pipe.length = ReadPositiveFloat("Введите длину трубы (км): ");
+    pipe.diametr = ReadInt("Введите диаметр трубы (мм): ", 1, 100000);
+    pipe.status = ReadInt("В ремонте? (1-да, 0-нет): ", 0, 1) == 1;
+    pipe.isAdded = true;
+    cout << "Труба добавлена!" << endl;
+}
 int main() {
 	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	return 0;
+    SetConsoleOutputCP(1251);
 
+    Pipe pipe;
+    CS   cs;
+
+    while (true) {
+        Show_menu();
+        int choice = ReadInt("", 0, 7);
+        switch (choice) {
+        case 1: Add_Pipe(pipe); break;
+        case 3: Show_All(pipe, cs); break;
+        case 0: cout << "Выход." << endl; return 0;
+        default: cout << "Пункт в разработке." << endl;
+        }
+    }
 }
+
