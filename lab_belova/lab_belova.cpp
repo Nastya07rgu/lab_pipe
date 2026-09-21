@@ -7,7 +7,7 @@ using namespace std;
 
 struct Pipe {
 	string name;
-	float lenght;
+	float length;
 	int diametr;
 	bool status;
 	bool isAdded = false;
@@ -59,6 +59,7 @@ string ReadNonEmptyString(const string& prompt) {
         cout << "Ошибка! Строка не может быть пустой." << endl;
     }
 }
+
 int main() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
