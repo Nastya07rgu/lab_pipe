@@ -158,24 +158,76 @@ void Edit_CS(CS& cs) {
         }
     }
 }
+void Save_To_File(const Pipe& pipe, const CS& cs, const string& filename) {
+    ofstream out(filename);
+    if (!out.is_open()) {
+        cout << "Не удалось открыть файл для записи!" << endl;
+        return;
+    }
+    out << pipe.isAdded << endl;
+    if (pipe.isAdded) {
+        out << pipe.name << endl;
+        out << pipe.length << endl;
+        out << pipe.diametr << endl;
+        out << pipe.status << endl;
+    }
+    out << cs.isAdded << endl;
+    if (cs.isAdded) {
+        out << cs.name << endl;
+        out << cs.number_work << endl;
+        out << cs.number_work_online << endl;
+        out << cs.class_cs << endl;
+    }
+    out.close();
+    cout << "Данные сохранены в " << filename << endl;
+}
+
+void Load_From_File(Pipe& pipe, CS& cs, const string& filename) {
+    ifstream in(filename);
+    if (!in.is_open()) {
+        cout << "Файл не найден!" << endl;
+        return;
+    }
+    in >> pipe.isAdded;
+    in.ignore(1000, '\n');
+    if (pipe.isAdded) {
+        getline(in, pipe.name);
+        in >> pipe.length >> pipe.diametr >> pipe.status;
+        in.ignore(1000, '\n');
+    }
+    in >> cs.isAdded;
+    in.ignore(1000, '\n');
+    if (cs.isAdded) {
+        getline(in, cs.name);
+        in >> cs.number_work >> cs.number_work_online;
+        in.ignore(1000, '\n');
+        getline(in, cs.class_cs);
+    }
+    in.close();
+    cout << "Данные загружены из " << filename << endl;
+}
 int main() {
 	SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
     Pipe pipe;
     CS   cs;
+    const string filename = "data.txt";
 
     while (true) {
         Show_menu();
         int choice = ReadInt("", 0, 7);
+
         switch (choice) {
-        case 1: Add_Pipe(pipe); break;
-        case 2: Add_CS(cs); break;
-        case 3: Show_All(pipe, cs); break;
-        case 4: Edit_Pipe(pipe); break;
-        case 5: Edit_CS(cs); break;
-        case 0: cout << "Выход." << endl; return 0;
-        default: cout << "Пункт в разработке." << endl;
+            case 1: Add_Pipe(pipe); break;
+            case 2: Add_CS(cs); break;
+            case 3: Show_All(pipe, cs); break;
+            case 4: Edit_Pipe(pipe); break;
+            case 5: Edit_CS(cs); break;
+            case 6: Save_To_File(pipe, cs, filename); break;
+            case 7: Load_From_File(pipe, cs, filename); break;
+            case 0: cout << "Выход." << endl; return 0;
+        
         }
     }
 }
