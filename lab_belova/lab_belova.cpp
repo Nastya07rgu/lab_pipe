@@ -1,5 +1,4 @@
-﻿
-#include <string>
+﻿#include <string>
 #include <iostream>
 #include <fstream>
 #include <windows.h>
@@ -21,12 +20,12 @@ struct CS {
 	bool isAdded = false;
 };
 
-int ReadInt(const string& prompt, int minVal, int maxVal) {
+int ReadInt(const string& prompt, int minVal, int maxVal) {//безопасный ввод целого числа
     int value;
     while (true) {
         cout << prompt;
         if (cin >> value && value >= minVal && value <= maxVal && cin.peek() == '\n') {//Проверяем, что после числа нет мусора
-            cin.ignore(1000, '\n');
+            cin.ignore(1000, '\n');//очищаем мусор
             return value;
         }
         cout << "Ошибка! Введите целое число от " << minVal
@@ -36,7 +35,7 @@ int ReadInt(const string& prompt, int minVal, int maxVal) {
     }
 }
 
-float ReadPositiveFloat(const string& prompt) {
+float ReadPositiveFloat(const string& prompt) {//безопасный ввод положительного числа
     float value;
     while (true) {
         cout << prompt;
@@ -50,11 +49,11 @@ float ReadPositiveFloat(const string& prompt) {
     }
 }
 
-string ReadNonEmptyString(const string& prompt) {
+string ReadNonEmptyString(const string& prompt) {//безопасный ввод строки
     string value;
     while (true) {
         cout << prompt;
-        getline(cin, value);
+        getline(cin, value);//читает всю строку целиком, включая пробелы
         if (!value.empty()) return value;
         cout << "Ошибка! Строка не может быть пустой." << endl;
     }
@@ -72,12 +71,30 @@ void Show_menu() {
     cout << "Выберите действие: ";
 }
 
+void Add_Pipe(Pipe& pipe) {
+    cout << "\n Добавление трубы " << endl;
+    pipe.name = ReadNonEmptyString("Введите название: ");
+    pipe.length = ReadPositiveFloat("Введите длину трубы (км): ");
+    pipe.diametr = ReadInt("Введите диаметр трубы (мм): ", 1, 100000);
+    pipe.status = ReadInt("В ремонте? (1-да, 0-нет): ", 0, 1) == 1;
+    pipe.isAdded = true;//помечаем трубу добавленой
+    cout << "Труба добавлена!" << endl;
+}
+void Add_CS(CS& cs) {
+    cout << "\n Добавление КС " << endl;
+    cs.name = ReadNonEmptyString("Название: ");
+    cs.number_work = ReadInt("Всего цехов: ", 1, 100000);
+    cs.number_work_online = ReadInt("Работающих цехов: ", 0, cs.number_work);
+    cs.class_cs = ReadNonEmptyString("Класс станции: ");
+    cs.isAdded = true;
+    cout << "КС добавлена!" << endl;
+}
 void Show_All(const Pipe& pipe, const CS& cs) {
-    cout << "\n=== Все объекты ===" << endl;
+    cout << "\n Все объекты " << endl;
 
     if (pipe.isAdded) {
-        cout << "\n--- Труба ---" << endl;
-        cout << "Километровая отметка: " << pipe.name << endl;
+        cout << "\n Труба " << endl;
+        cout << "Название: " << pipe.name << endl;
         cout << "Длина: " << pipe.length << " км" << endl;
         cout << "Диаметр: " << pipe.diametr << " мм" << endl;
         cout << "В ремонте: " << (pipe.status ? "да" : "нет") << endl;
@@ -87,7 +104,7 @@ void Show_All(const Pipe& pipe, const CS& cs) {
     }
 
     if (cs.isAdded) {
-        cout << "\n--- Компрессорная станция ---" << endl;
+        cout << "\n Компрессорная станция " << endl;
         cout << "Название: " << cs.name << endl;
         cout << "Всего цехов: " << cs.number_work << endl;
         cout << "Цехов в работе: " << cs.number_work_online << endl;
@@ -97,31 +114,12 @@ void Show_All(const Pipe& pipe, const CS& cs) {
         cout << "КС не добавлена." << endl;
     }
 }
-
-void Add_Pipe(Pipe& pipe) {
-    cout << "\n=== Добавление трубы ===" << endl;
-    pipe.name = ReadNonEmptyString("Введите километровую отметку (название): ");
-    pipe.length = ReadPositiveFloat("Введите длину трубы (км): ");
-    pipe.diametr = ReadInt("Введите диаметр трубы (мм): ", 1, 100000);
-    pipe.status = ReadInt("В ремонте? (1-да, 0-нет): ", 0, 1) == 1;
-    pipe.isAdded = true;
-    cout << "Труба добавлена!" << endl;
-}
-void Add_CS(CS& cs) {
-    cout << "\n=== Добавление КС ===" << endl;
-    cs.name = ReadNonEmptyString("Название: ");
-    cs.number_work = ReadInt("Всего цехов: ", 1, 100000);
-    cs.number_work_online = ReadInt("Работающих цехов: ", 0, cs.number_work);
-    cs.class_cs = ReadNonEmptyString("Класс станции: ");
-    cs.isAdded = true;
-    cout << "КС добавлена!" << endl;
-}
 void Edit_Pipe(Pipe& pipe) {
     if (!pipe.isAdded) {
         cout << "Сначала добавьте трубу!" << endl;
         return;
     }
-    cout << "\n=== Редактирование трубы ===" << endl;
+    cout << "\n Редактирование трубы " << endl;
     cout << "Текущий статус: " << (pipe.status ? "в ремонте" : "не в ремонте") << endl;
     pipe.status = ReadInt("Новый статус (1-в ремонте, 0-не в ремонте): ", 0, 1) == 1;
     cout << "Статус обновлён." << endl;
@@ -132,7 +130,7 @@ void Edit_CS(CS& cs) {
         cout << "Сначала добавьте КС!" << endl;
         return;
     }
-    cout << "\n=== Редактирование КС ===" << endl;
+    cout << "\n Редактирование КС " << endl;
     cout << "Цехов всего: " << cs.number_work << endl;
     cout << "Цехов в работе: " << cs.number_work_online << endl;
     cout << "1. Запустить цех" << endl;
@@ -140,7 +138,7 @@ void Edit_CS(CS& cs) {
     int choice = ReadInt("Выберите действие: ", 1, 2);
 
     if (choice == 1) {
-        if (cs.number_work_online < cs.number_work) {
+        if (cs.number_work_online < cs.number_work) {//проверяем есть ли что запускать
             cs.number_work_online++;
             cout << "Цех запущен. Работает: " << cs.number_work_online << endl;
         }
@@ -149,7 +147,7 @@ void Edit_CS(CS& cs) {
         }
     }
     else {
-        if (cs.number_work_online > 0) {
+        if (cs.number_work_online > 0) {//проверяем есть ли что останавливать
             cs.number_work_online--;
             cout << "Цех остановлен. Работает: " << cs.number_work_online << endl;
         }
@@ -164,7 +162,7 @@ void Save_To_File(const Pipe& pipe, const CS& cs, const string& filename) {
         cout << "Не удалось открыть файл для записи!" << endl;
         return;
     }
-    out << pipe.isAdded << endl;
+    out << pipe.isAdded << endl;//???
     if (pipe.isAdded) {
         out << pipe.name << endl;
         out << pipe.length << endl;
