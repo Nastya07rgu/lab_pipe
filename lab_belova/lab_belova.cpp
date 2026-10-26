@@ -72,23 +72,29 @@ void Show_menu() {
     cout << "Выберите действие: ";
 }
 
-void Add_Pipe(Pipe& pipe) {
+void Add_Pipe(vector<Pipe>& pipes, int& nextId) {
+    Pipe p;
+    p.id = nextId++;
     cout << "\n Добавление трубы " << endl;
-    pipe.name = ReadNonEmptyString("Введите название: ");
-    pipe.length = ReadPositiveFloat("Введите длину трубы (км): ");
-    pipe.diametr = ReadInt("Введите диаметр трубы (мм): ", 1, 100000);
-    pipe.status = ReadInt("В ремонте? (1-да, 0-нет): ", 0, 1) == 1;
-    pipe.isAdded = true;//помечаем трубу добавленой
-    cout << "Труба добавлена!" << endl;
+    p.name = ReadNonEmptyString("Введите название: ");
+    p.length = ReadPositiveFloat("Введите длину трубы (км): ");
+    p.diametr = ReadInt("Введите диаметр трубы (мм): ", 1, 100000);
+    p.status = ReadInt("В ремонте? (1-да, 0-нет): ", 0, 1) == 1;
+
+    pipes.push_back(p); // добавляем в конец вектора
+    cout << "Труба добавлена! ID: " << p.id << endl;
 }
-void Add_CS(CS& cs) {
+void Add_CS(vector<CS>& csList, int& nextId) {
+    CS c;
+    c.id = nextId++;
     cout << "\n Добавление КС " << endl;
-    cs.name = ReadNonEmptyString("Название: ");
-    cs.number_work = ReadInt("Всего цехов: ", 1, 100000);
-    cs.number_work_online = ReadInt("Работающих цехов: ", 0, cs.number_work);
-    cs.class_cs = ReadNonEmptyString("Класс станции: ");
-    cs.isAdded = true;
-    cout << "КС добавлена!" << endl;
+    c.name = ReadNonEmptyString("Название: ");
+    c.number_work = ReadInt("Всего цехов: ", 1, 100000);
+    c.number_work_online = ReadInt("Работающих цехов: ", 0, c.number_work);
+    c.class_cs = ReadNonEmptyString("Класс станции: ");
+    
+    csList.push_back(c);
+    cout << "КС добавлена! ID: " << c.id << endl;
 }
 void Show_All(const Pipe& pipe, const CS& cs) {
     cout << "\n Все объекты " << endl;
@@ -220,8 +226,8 @@ int main() {
         int choice = ReadInt("", 0, 7);
 
         switch (choice) {
-            case 1: Add_Pipe(pipe); break;
-            case 2: Add_CS(cs); break;
+            case 1: Add_Pipe(pipes, nextPipeId); break;
+            case 2: Add_CS(csList, nextCsId); break;
             case 3: Show_All(pipe, cs); break;
             case 4: Edit_Pipe(pipe); break;
             case 5: Edit_CS(cs); break;
