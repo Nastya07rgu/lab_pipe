@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
+#include <vector>
 using namespace std;
 
 struct Pipe {
@@ -9,7 +10,7 @@ struct Pipe {
 	float length;
 	int diametr;
 	bool status;
-	bool isAdded = false;
+    int id;
 };
 
 struct CS {
@@ -17,14 +18,14 @@ struct CS {
 	int number_work;
 	int number_work_online;
 	string class_cs;
-	bool isAdded = false;
+    int id;
 };
 
 int ReadInt(const string& prompt, int minVal, int maxVal) {//безопасный ввод целого числа
     int value;
     while (true) {
         cout << prompt;
-        if (cin >> value && value >= minVal && value <= maxVal && cin.peek() == '\n') {//Проверяем, что после числа нет мусора
+        if (cin >> value && value >= minVal && value <= maxVal && cin.peek() == '\n') {//проверяем, что после числа нет мусора
             cin.ignore(1000, '\n');//очищаем мусор
             return value;
         }
@@ -162,7 +163,7 @@ void Save_To_File(const Pipe& pipe, const CS& cs, const string& filename) {
         cout << "Не удалось открыть файл для записи!" << endl;
         return;
     }
-    out << pipe.isAdded << endl;//???
+    out << pipe.isAdded << endl;
     if (pipe.isAdded) {
         out << pipe.name << endl;
         out << pipe.length << endl;
@@ -208,8 +209,10 @@ int main() {
 	SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    Pipe pipe;
-    CS   cs;
+    vector<Pipe> pipes;
+    vector<CS> csList;
+    int nextPipeId = 1;
+    int nextCsId = 1;
     const string filename = "data.txt";
 
     while (true) {
