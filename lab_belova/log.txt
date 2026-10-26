@@ -3,3 +3,8 @@ ADD Pipe id=1 name=ляляля
 BATCH EDIT type=1 count=1
 BATCH DELETE type=1 count=1
 --- PROGRAM EXIT ---
+ PROGRAM STARTED 
+ADD Pipe id=1 name=москва
+ADD Pipe id=2 name=москва1
+ADD CS id=1 name=питер
+ADD CS id=2 name=питер2

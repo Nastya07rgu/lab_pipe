@@ -117,30 +117,30 @@ void Show_All(const vector<Pipe>& pipes, const vector<CS>& csList) {
     cout << "\n Все объекты " << endl;
 
     if (pipes.empty()) {
-        cout << "\n[Трубы] Список пуст." << endl;
+        cout << "\nСписок труб пуст." << endl;
     }
     else {
-        cout << "\n[Трубы] В списке: " << pipes.size() << endl;
+        cout << "\nТрубы в списке: " << pipes.size() << endl;
         for (const Pipe& pipe : pipes) {
-            cout << "  ID: " << pipe.id
-                << " | Название: " << pipe.name
-                << " | Длина: " << pipe.length << " км"
-                << " | Диаметр: " << pipe.diametr << " мм"
-                << " | В ремонте: " << (pipe.status ? "да" : "нет") << endl;
+            cout << "  ID: " << pipe.id << endl;
+            cout << "  Название: " << pipe.name << endl;
+            cout << "  Длина: " << pipe.length << " км" << endl;
+            cout << "  Диаметр: " << pipe.diametr << " мм" << endl;
+            cout << "  В ремонте: " << (pipe.status ? "да" : "нет") << endl;
         }
     }
 
     if (csList.empty()) {
-        cout << "\n[КС] Список пуст." << endl;
+        cout << "\nСписок КС пуст." << endl;
     }
     else {
-        cout << "\n[КС] В списке: " << csList.size() << endl;
+        cout << "\nКС в списке: " << csList.size() << endl;
         for (const CS& cs : csList) {
-            cout << "  ID: " << cs.id
-                << " | Название: " << cs.name
-                << " | Всего цехов: " << cs.number_work
-                << " | В работе: " << cs.number_work_online
-                << " | Класс: " << cs.class_cs << endl;
+            cout << "  ID: " << cs.id << endl;
+            cout << "  Название: " << cs.name << endl;
+            cout << "  Всего цехов: " << cs.number_work << endl;
+            cout << "  В работе: " << cs.number_work_online << endl;
+            cout << "  Класс: " << cs.class_cs << endl;
         }
     }
 }
@@ -302,7 +302,7 @@ void find_object(vector<Pipe>& pipes, vector<CS>& csList, Logger& logger) {
 
     vector<int> ids;
 
-    // 1. Ищем объекты
+    // Ищем объекты
     if (type == 1) {
         if (pipes.empty()) { cout << "Труб нет." << endl; return; }
         ids = Search_Pipes(pipes);
@@ -317,14 +317,17 @@ void find_object(vector<Pipe>& pipes, vector<CS>& csList, Logger& logger) {
         return;
     }
 
-    // 2. Выводим найденные
+    // Выводим найденные
     cout << "\nНайдено (" << ids.size() << "):" << endl;
     for (int id : ids) {
         if (type == 1) {
             for (const Pipe& p : pipes) {
                 if (p.id == id) {
-                    cout << "ID: " << p.id << " | " << p.name
-                        << " | " << (p.status ? "в ремонте" : "работает") << endl;
+                    cout << "ID: " << p.id << endl;
+                    cout << "Название: " << p.name << endl;
+                    cout << "Длина: " << p.length << " км" << endl;
+                    cout << "Диаметр: " << p.diametr << " мм" << endl;
+                    cout << "В ремонте: " << (p.status ? "да" : "нет") << endl;
                     break;
                 }
             }
@@ -332,16 +335,18 @@ void find_object(vector<Pipe>& pipes, vector<CS>& csList, Logger& logger) {
         else {
             for (const CS& c : csList) {
                 if (c.id == id) {
-                    cout << "ID: " << c.id << " | " << c.name
-                        << " | цехов в работе: " << c.number_work_online
-                        << " из " << c.number_work << endl;
+                    cout << "ID: " << c.id << endl;
+                    cout << "Название: " << c.name << endl;
+                    cout << "Всего цехов: " << c.number_work << endl;
+                    cout << "Цехов в работе: " << c.number_work_online << endl;
+                    cout << "Класс: " << c.class_cs << endl;
                     break;
                 }
             }
         }
     }
 
-    // 3. Выбор "все" или "по одному"
+    // Выбор "все" или "по одному"
     int pick = ReadInt("\n1 - выбрать ВСЕ найденные, 2 - выбрать по ID: ", 1, 2);
 
     vector<int> targets;
@@ -368,11 +373,11 @@ void find_object(vector<Pipe>& pipes, vector<CS>& csList, Logger& logger) {
         return;
     }
 
-    // 4. Действие: редактировать или удалить
+    // Действие: редактировать или удалить
     int action = ReadInt("\n1 - редактировать, 2 - удалить: ", 1, 2);
 
     if (action == 1) {
-        // РЕДАКТИРОВАНИЕ
+        // редактирование
         if (type == 1) {
             int newStatus = ReadInt("Новый статус труб (1-в ремонте, 0-работает): ", 0, 1);
             for (int id : targets) {
@@ -402,7 +407,7 @@ void find_object(vector<Pipe>& pipes, vector<CS>& csList, Logger& logger) {
         logger.log("BATCH EDIT type=" + to_string(type) + " count=" + to_string(targets.size()));
     }
     else {
-        // --- УДАЛЕНИЕ ---
+        // удаление
         int count = 0;
         for (int id : targets) {
             if (type == 1) {
@@ -420,6 +425,100 @@ void find_object(vector<Pipe>& pipes, vector<CS>& csList, Logger& logger) {
         logger.log("BATCH DELETE type=" + to_string(type) + " count=" + to_string(count));
     }
 }
+
+
+void Save_To_File(const vector<Pipe>& pipes, const vector<CS>& csList, Logger& logger) {
+    cout << "Введите имя файла для сохранения (Enter — data.txt): ";
+    string filename;
+    getline(cin, filename);
+    if (filename.empty()) filename = "data.txt";
+
+    ofstream out(filename);
+    if (!out.is_open()) {
+        cout << "Не удалось открыть файл для записи!" << endl;
+        logger.log("SAVE FAIL file=" + filename);
+        return;
+    }
+
+    
+    out << pipes.size() << endl;
+    for (const Pipe& p : pipes) {
+        out << p.id << endl
+            << p.name << endl
+            << p.length << endl
+            << p.diametr << endl
+            << p.status << endl;
+    }
+
+   
+    out << csList.size() << endl;
+    for (const CS& c : csList) {
+        out << c.id << endl
+            << c.name << endl
+            << c.number_work << endl
+            << c.number_work_online << endl
+            << c.class_cs << endl;
+    }
+
+    out.close();
+    logger.log("SAVE file=" + filename + " pipes=" + to_string(pipes.size()) + " cs=" + to_string(csList.size()));
+    cout << "Данные сохранены в " << filename << endl;
+}
+
+void Load_From_File(vector<Pipe>& pipes, vector<CS>& csList,
+    int& nextPipeId, int& nextCsId, Logger& logger) {
+    cout << "Введите имя файла для загрузки (Enter — data.txt): ";
+    string filename;
+    getline(cin, filename);
+    if (filename.empty()) filename = "data.txt";
+
+    ifstream in(filename);
+    if (!in.is_open()) {
+        cout << "Файл не найден!" << endl;
+        logger.log("LOAD FAIL file=" + filename);
+        return;
+    }
+
+    pipes.clear();
+    csList.clear();
+
+   
+    int count;
+    in >> count;
+    in.ignore(1000, '\n');
+    int maxPipeId = 0;
+    for (int i = 0; i < count; ++i) {
+        Pipe p;
+        in >> p.id;     in.ignore(1000, '\n');
+        getline(in, p.name);
+        in >> p.length >> p.diametr >> p.status;
+        in.ignore(1000, '\n');
+        pipes.push_back(p);
+        if (p.id > maxPipeId) maxPipeId = p.id;
+    }
+    nextPipeId = maxPipeId + 1; // Чтобы новые ID не пересеклись со старыми
+
+    
+    in >> count;
+    in.ignore(1000, '\n');
+    int maxCsId = 0;
+    for (int i = 0; i < count; ++i) {
+        CS c;
+        in >> c.id;     in.ignore(1000, '\n');
+        getline(in, c.name);
+        in >> c.number_work >> c.number_work_online;
+        in.ignore(1000, '\n');
+        getline(in, c.class_cs);
+        csList.push_back(c);
+        if (c.id > maxCsId) maxCsId = c.id;
+    }
+    nextCsId = maxCsId + 1;
+
+    in.close();
+    logger.log("LOAD file=" + filename + " pipes=" + to_string(pipes.size()) + " cs=" + to_string(csList.size()));
+    cout << "Данные загружены из " << filename << endl;
+}
+
 int main() {
 	SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
@@ -432,7 +531,7 @@ int main() {
     int nextCsId = 1;
 
     logger.log(" PROGRAM STARTED ");
-    //const string filename = "data.txt";
+    
 
     while (true) {
         Show_menu();
@@ -443,9 +542,8 @@ int main() {
             case 2: Add_CS(csList, nextCsId, logger); break;
             case 3: Show_All(pipes, csList); break;
             case 4: find_object(pipes, csList, logger); break;
-           
-           // case 6: Save_To_File(pipe, cs, filename); break;
-            //case 7: Load_From_File(pipe, cs, filename); break;
+            case 5: Save_To_File(pipes, csList, logger); break; 
+            case 6: Load_From_File(pipes, csList, nextPipeId, nextCsId, logger); break; 
             case 0:
                 logger.log(" PROGRAM EXIT ");
                 cout << "Выход." << endl; 
