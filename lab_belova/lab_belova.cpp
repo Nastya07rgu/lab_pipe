@@ -96,29 +96,35 @@ void Add_CS(vector<CS>& csList, int& nextId) {
     csList.push_back(c);
     cout << "КС добавлена! ID: " << c.id << endl;
 }
-void Show_All(const Pipe& pipe, const CS& cs) {
+void Show_All(const vector<Pipe>& pipes, const vector<CS>& csList) {
     cout << "\n Все объекты " << endl;
 
-    if (pipe.isAdded) {
-        cout << "\n Труба " << endl;
-        cout << "Название: " << pipe.name << endl;
-        cout << "Длина: " << pipe.length << " км" << endl;
-        cout << "Диаметр: " << pipe.diametr << " мм" << endl;
-        cout << "В ремонте: " << (pipe.status ? "да" : "нет") << endl;
+    if (pipes.empty()) {
+        cout << "\n[Трубы] Список пуст." << endl;
     }
     else {
-        cout << "Труба не добавлена." << endl;
+        cout << "\n[Трубы] В списке: " << pipes.size() << endl;
+        for (const Pipe& pipe : pipes) {
+            cout << "  ID: " << pipe.id
+                << " | Название: " << pipe.name
+                << " | Длина: " << pipe.length << " км"
+                << " | Диаметр: " << pipe.diametr << " мм"
+                << " | В ремонте: " << (pipe.status ? "да" : "нет") << endl;
+        }
     }
 
-    if (cs.isAdded) {
-        cout << "\n Компрессорная станция " << endl;
-        cout << "Название: " << cs.name << endl;
-        cout << "Всего цехов: " << cs.number_work << endl;
-        cout << "Цехов в работе: " << cs.number_work_online << endl;
-        cout << "Класс: " << cs.class_cs << endl;
+    if (csList.empty()) {
+        cout << "\n[КС] Список пуст." << endl;
     }
     else {
-        cout << "КС не добавлена." << endl;
+        cout << "\n[КС] В списке: " << csList.size() << endl;
+        for (const CS& cs : csList) {
+            cout << "  ID: " << cs.id
+                << " | Название: " << cs.name
+                << " | Всего цехов: " << cs.number_work
+                << " | В работе: " << cs.number_work_online
+                << " | Класс: " << cs.class_cs << endl;
+        }
     }
 }
 void Edit_Pipe(Pipe& pipe) {
@@ -228,11 +234,11 @@ int main() {
         switch (choice) {
             case 1: Add_Pipe(pipes, nextPipeId); break;
             case 2: Add_CS(csList, nextCsId); break;
-            case 3: Show_All(pipe, cs); break;
-            case 4: Edit_Pipe(pipe); break;
-            case 5: Edit_CS(cs); break;
-            case 6: Save_To_File(pipe, cs, filename); break;
-            case 7: Load_From_File(pipe, cs, filename); break;
+            case 3: Show_All(pipes, csList); break;
+            //case 4: Edit_Pipe(pipe); break;
+            //case 5: Edit_CS(cs); break;
+            //case 6: Save_To_File(pipe, cs, filename); break;
+            //case 7: Load_From_File(pipe, cs, filename); break;
             case 0: cout << "Выход." << endl; return 0;
         
         }
